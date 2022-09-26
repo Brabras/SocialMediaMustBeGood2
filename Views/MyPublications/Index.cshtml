@@ -1,0 +1,72 @@
+﻿@model SocialMediaMustBeGood2.ViewModels.PublicationsListViewModel
+
+@{
+    ViewData["Title"] = "MyPublications";
+}
+
+<h1>MyPublications</h1>
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<container class="w-50  d-flex align-items-center justify-content-center flex-wrap">
+    @for (int i = 0; i < Model.Publications.Count(); i++)
+    {
+        <div class="card" style="width: 18rem;">
+            <img src="@Model.Publications[i].PictureLink" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Publications[i].Header</h5>
+                <p class="card-text">@Model.Publications[i].Text</p>
+                <form method="post" asp-controller="MyPublications" asp-action="Like">
+                    <input hidden name="publicationId" value="@Model.Publications[i].Id">
+                    <button type="submit">@Model.Publications[i].LikesCount</button>
+                </form>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#commentCollapse" aria-expanded="false" aria-controls="commentCollapse">Оставить комментарий</button>
+                <div class="collapse multi-collapse" id="commentCollapse">
+                    <form method="post" asp-controller="MyPublications" asp-action="LeaveComment">
+                        <textarea name="inputText" placeholder="Type here..."></textarea>
+                        <input hidden name="publicationId" value="@Model.Publications[i].Id">
+                        <button type="submit">Add</button>
+                    </form>
+                </div>
+                <a asp-controller="MyPublications" asp-action="Delete" asp-route-id="@Model.Publications[i].Id">Delete</a>
+                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#comments" aria-expanded="false" aria-controls="commentCollapse">Показать/скрыть комментарии</button>
+                <div class="collapse multi-collapse" id="comments">
+                    @if (Model.Publications[i].CommentsCount > 0)
+                    {
+                        @foreach (var comment in Model.Comments[i])
+                        {
+                            <div class="card mb-3" style="max-width: 540px;">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img src="@comment.User.Avatar" class="img-fluid rounded-start" alt="...">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@comment.User.UserName</h5>
+                                            <p class="card-text">@comment.Text</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Комментариев пока нет</p>
+                    }
+
+                </div>
+            </div>
+        </div>
+    }
+</container>
+@if (Model.PageViewModel.HasPreviousPage)
+{
+    <a asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber-1)"
+   class="btn btn-outline-dark"><i class="glyphicon glyphicon-chevron-left"></i>Зад</a>
+}
+@if (Model.PageViewModel.HasNextPage)
+{
+    <a asp-action="Index" asp-route-page="@(Model.PageViewModel.PageNumber+1)"
+   class="btn btn-outline-dark"><i class="glyphicon glyphicon-chevron-right"></i>Вперде</a>
+}

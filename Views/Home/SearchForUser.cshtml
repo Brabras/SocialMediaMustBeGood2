@@ -1,0 +1,27 @@
+﻿@model IEnumerable<SocialMediaMustBeGood2.Models.User>
+
+@{
+    ViewData["Title"] = "SearchForUser";
+}
+<div asp-validation-summary="ModelOnly"></div>
+
+<h1>SearchForUser</h1>
+    <div class="container d-flex align-items-center justify-content-center flex-wrap" >
+        @foreach (var item in Model) {
+
+
+
+        <div class="card" style="width: 18rem; max-width: 30%">
+            <img src="@item.Avatar" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">@item.UserName</h5>
+                <p class="card-text">@item.UserInfo</p>
+                <p class="card-text">Пол: @item.Sex</p>
+                <p class="card-text">Количество публикаций: @item.PublicationsCount</p>
+                <p class="card-text">Количество подписчиков: @item.SubscribersCount</p>
+
+                <a asp-action="Subscribe" asp-controller="Home" asp-route-id="@item.Id" asp-route-search="@ViewBag.Search" class="btn btn-primary">Подписаться</a>
+            </div>
+        </div>
+}
+    </div>
