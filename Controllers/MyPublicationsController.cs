@@ -42,7 +42,7 @@ namespace SocialMediaMustBeGood2.Controllers
             var comments = new List<List<Comment>>();
             foreach (var list in items)
             {
-                var list1 = await _context.Comments.Where(c => c.PublicationId == list.Id).ToListAsync() ?? new List<Comment>();
+                var list1 = await _context.Comments.Where(c => c.PublicationId == list.Id).Include(p => p.User).ToListAsync() ?? new List<Comment>();
                 comments.Add(list1);
             }
             var booksListModel = new PublicationsListViewModel
